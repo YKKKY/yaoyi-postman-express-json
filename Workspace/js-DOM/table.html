@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>表格的增删改查</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+
+    <style type="text/css">
+        #table_1 {
+
+            text-align: center;
+        }
+
+        #table_1 tr td {
+            border: 0px;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        var flag = "save";
+        var didshow = false;
+        var updateRowIndex = -1;
+
+        function onShow() {
+            flag = "save";
+            var f = document.getElementById("did");
+
+            if (!didshow) {
+                f.style.visibility = "visible";
+            }
+            /*           else {
+             f.style.visibility = "hidden";
+             }
+             didshow = !didshow;*/
+        }
+
+        function insert_row() {
+
+            switch (flag) {
+
+                case "save":
+                    insert_save();
+                    break;
+                case  "update":
+                    insert_update();
+                    break;
+                default:
+                    alert('操作失败');
+            }
+        }
+        function insert_save() {
+
+
+            var table = document.getElementById("table_1");
+
+            var name = document.getElementById("name").value;
+            var type = document.getElementById("type").value;
+
+            var number = table.rows.length;
+            var row = table.insertRow(table.rows.length);  //末尾追加一行
+
+            row.insertCell(0).innerHTML = number;  //功能函数
+            row.insertCell(1).innerHTML = name;
+            row.insertCell(2).innerHTML = type;
+            row.insertCell(3).innerHTML = ' <input  type="button" onclick="deleteRow(this.parentNode.parentNode)" value = "删除" /> <input  type = "button" value = "修改 " onclick ="update(this.parentNode.parentNode)" />';  //delete是特殊功能函数
+
+            document.getElementById("name").value = "";
+            document.getElementById("type").value = "";
+
+
+            var f = document.getElementById("did");
+            f.style.visibility = "hidden";
+
+
+            alert("添加成功");
+        }
+
+        //修改后的保存
+        function insert_update() {
+
+            var table = document.getElementById("table_1");
+            tr = table.rows[updateRowIndex];
+
+            var p = document.getElementById("name");
+            tr.cells[1].innerHTML = p.value;  //innerHTML不可替换成value
+
+            p = document.getElementById("type");
+            tr.cells[2].innerHTML = p.value;
+
+
+            var f = document.getElementById("did");
+            f.style.visibility = "hidden";
+
+            document.getElementById("name").value = "";
+            document.getElementById("type").value = "";
+
+            alert("update数据成功！！");
+
+        }
+
+
+        function deleteRow(row) {
+
+            var table = document.getElementById("table_1");
+            table.deleteRow(row.rowIndex);
+
+            refurbish_();
+            alert("删除成功");
+
+        }
+
+        function refurbish_() {
+
+            var table = document.getElementById("table_1");
+            var row = table.rows;
+
+            for (var j = 1; j < row.length; j++) {
+                row[j].cells[0].innerHTML = j;
+            }
+
+        }
+
+        function update(row) {
+
+            updateRowIndex = row.rowIndex;
+            flag = "update";
+
+            document.getElementById("name").value = row.cells[1].innerHTML;
+            document.getElementById("type").value = row.cells[2].innerHTML;
+
+            var f = document.getElementById("did");
+            f.style.visibility = "visible";
+
+        }
+
+        function find() {
+
+            var v = document.getElementById("find_name").value;
+            var table = document.getElementById("table_1");
+            var row = table.rows;
+
+            for (var find = 1; find < row.length; find++) {
+                if (v !== row[find].cells[1].innerHTML) {
+                    row[find].style.display = "none";
+                } else {
+                    row[find].style.display = "";
+                }
+            }
+
+            refurbish_();
+        }
+
+        function findAll() {
+            var table = document.getElementById("table_1");
+            var row = table.rows;
+
+            for (var find = 1; find < row.length; find++) {
+
+                row[find].style.display = "";
+            }
+
+        }
+
+    </script>
+</head>
+
+<body>
+
+<button onclick="onShow()" id="buttonOne" boder="0">增加</button>
+<input type="text" name="name" id="find_name" placeholder="按照名城查找"/>
+<button onclick="find()" id="buttonTwo" boder="0">查找</button>
+<button onclick="findAll()" id="buttonThree" border="0">查询所有</button>
+
+
+<div>
+
+    <table align="center" id="table_1" border="1" width="70%" style="color:red" boder="1">
+        <tr style="background:blue">
+            <td>编号</td>
+            <td>名称</td>
+            <td>类别</td>
+            <td>操作</td>
+        </tr>
+
+    </table>
+</div>
+<br>
+<div id="did" style="visibility:hidden">
+    <form>
+        <table align="center">
+            <tr>
+                <td>
+                    名称：
+                    <input type="text" id="name"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    类别：
+                    <input type="text" id="type"/>
+                </td>
+
+            </tr>
+        </table>
+        <br>
+        <center>
+            <button onclick="insert_row()" type="button">保存</button>
+            <button type="reset">重置</button>
+
+        </center>
+
+    </form>
+</div>
+
+</body>
+</html>
